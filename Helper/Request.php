@@ -7,12 +7,10 @@ namespace Helper;
 class Request
 {
     private $get = [];
-    private $server = [];
 
     public function __construct()
     {
         $this->get = $_GET;
-        $this->server = $_SERVER;
     }
 
     // === GET ===
@@ -43,19 +41,16 @@ class Request
         return true;
     }
 
-    // === SERVER ===
-    public function isPost(): bool
-    {
-        return $this->server['REQUEST_METHOD'] === 'POST';
-    }
+    // 
 
-    public function isGet(): bool
+    public function hasProperties($object, $properties)
     {
-        return $this->server['REQUEST_METHOD'] === 'GET';
-    }
+        foreach ($properties as $property) {
+            if (!property_exists($object, $property)) {
+                return false;
+            }
+        }
 
-    public function queryString(): string
-    {
-        return $this->server['QUERY_STRING'];
+        return true;
     }
 }
