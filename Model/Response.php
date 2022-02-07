@@ -14,21 +14,23 @@ class Response
       $this->data = $data;
    }
 
-   public function setMessage($message)
+   public function setValidateMessages($validateMessages)
    {
-      $this->message = $message;
+      $this->validateMessages = $validateMessages;
    }
 
    public function success($data = null)
    {
       $this->setStatus(200);
       $this->setData($data);
+      $this->send();
    }
 
-   public function error($status, $message)
+   public function error($status, $validateMessages)
    {
       $this->setStatus($status);
-      $this->setMessage($message);
+      $this->setValidateMessages($validateMessages);
+      $this->send();
    }
 
    public function send()
