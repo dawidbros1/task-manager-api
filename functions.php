@@ -11,16 +11,16 @@ function getController()
   $response = new Response;
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri = explode('/', $uri);
-  $controllerName = $uri[3];
+  $controllerName = $uri[4];
 
   $namespace = "Controller\\" . ucfirst($controllerName) . "Controller";
 
   if (!file_exists(__DIR__ . "\\" . $namespace . ".php")) {
-    $response->error(404, "Controller [" . $controllerName . "] doesnt exists");
+    $response->error(400, "Controller [" . $controllerName . "] doesnt exists");
     $response->send();
   }
 
-  $controller = new $namespace($uri[4]);
+  $controller = new $namespace($uri[5]);
 
   return $controller;
 }

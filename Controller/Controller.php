@@ -5,8 +5,9 @@ namespace Controller;
 use Model\Database;
 use Model\Response;
 use Helper\Request;
+use Validator\Validator;
 
-abstract class Controller
+abstract class Controller extends Validator
 {
     protected static $config;
 
@@ -39,7 +40,7 @@ abstract class Controller
     {
         if (!method_exists($this, $this->action . "Action")) {
             $className = (new \ReflectionClass($this))->getShortName();
-            $this->response->error(404, "Action [" . $this->action . "] doesn't exists in " . $className);
+            $this->response->error(400, "Action [" . $this->action . "] doesn't exists in " . $className);
             $this->response->send();
         }
 
