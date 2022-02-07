@@ -37,7 +37,7 @@ class Auth extends Database
       return $data;
    }
 
-   public function isUniqueEmail(string $email)
+   public function isEmailUnique(string $email)
    {
       $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email=:email");
       $stmt->execute(['email' => $email]);
