@@ -4,6 +4,7 @@ namespace Controller;
 
 use Rules\AuthRules;
 use Model\Auth;
+use stdClass;
 
 class AuthController extends Controller
 {
@@ -39,35 +40,29 @@ class AuthController extends Controller
 
    public function loginAction(): void
    {
+      $data = json_decode(file_get_contents("php://input"));
       $names = ['email', 'password'];
 
-      // if ($this->request->isGet() && $this->request->hasGetNames($names)) {
-      //    $data = $this->request->getParams($names);
-      //    $user = $this->model->login($data['email'], $data['password']);
+      if (!$this->request->hasProperties($data, $names)) {
+         $this->response->error(400, "Brakujące parametry w formularzu");
+      }
 
-      //    if ($user == null) {
-      //       $this->response->error(404, "Nieprawidłeowe dane logowania");
-      //    } else {
-      //       $this->response->success($user);
-      //    }
+      if ($user = $this->model->login($data->email, $data->password)) {
+         $user = (object) $user;
+         $user->password = "";
 
-      // if ($id = $this->model->login($data['email'], $this->hash($data['password']))) {
-      // Session::set('user:id', $id);
-      // $lastPage = Session::getNextClear('lastPage');
-      // $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
-      // } else {
-      // if (in_array($data["email"], $this->repository->getEmails())) {
-      //     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
-      // } else {
-      //     Session::set("error:email:null", "Podany adres email nie istnieje");
-      // }
+         $object = new stdClass();
+         $object->user = $user;
 
-      // unset($data['password']);
-      // $this->redirect(self::$route->get('auth.login'), $data);
-      // }
-      // } else {
-      // $this->response->error(404, "Brakujące parametry w formularzu");
-      //   $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
-      // }
+         $this->response->success($object);
+      }
+
+      if ($this->model->isEmailUnique($data->email)) {
+         $validateMessages['email']['notExist'] = "Podany adres email nie istnieje";
+      } else {
+         $validateMessages['password']['notCorrect'] = "Hasło jest błędne";
+      }
+
+      $this->response->error(403, $validateMessages);
    }
 }

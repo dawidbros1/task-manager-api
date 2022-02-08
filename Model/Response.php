@@ -19,7 +19,7 @@ class Response
       $this->validateMessages = $validateMessages;
    }
 
-   public function success($data = null)
+   public function success(?object $data = null)
    {
       $this->setStatus(200);
       $this->setData($data);

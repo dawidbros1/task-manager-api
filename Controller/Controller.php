@@ -46,7 +46,7 @@ abstract class Controller extends Validator
 
         $action = $this->action . "Action";
         $this->$action();
-        $this->response->send();
+        // $this->response->send();
     }
 
     protected function hash($param, $method = null)
