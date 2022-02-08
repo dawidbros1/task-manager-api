@@ -17,7 +17,7 @@ class AuthController extends Controller
    public function registerAction(): void
    {
       $data = json_decode(file_get_contents("php://input"));
-      $names = ['username', 'email', 'password'];
+      $names = ['username', 'email', 'password', 'repeatPassword'];
 
       if (!$this->request->hasProperties($data, $names)) {
          $this->response->error(400, "Brakujące parametry w formularzu");

@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Validator;
 
-use App\Helper\Session;
-
-// use App\Excep
-
 class Validator
 {
     // Metody walidacyjne wielokrotnego użytku
@@ -45,9 +41,10 @@ class Validator
         $types = array_keys($data);
         $messages = [];
 
-        if (array_key_exists('password', $data) && array_key_exists('repeat_password', $data)) {
-            if ($data['password'] != $data['repeat_password']) {
-                // Session::set("error:repeat_password:same", "Hasła nie są jednakowe");
+        if (array_key_exists('password', $data) && array_key_exists('repeatPassword', $data)) {
+            if ($data['password'] != $data['repeatPassword']) {
+                $messages['repeatPassword']['same'] = "Hasła nie są jednakowe";
+                $validate = false;
             }
         }
 
