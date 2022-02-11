@@ -53,4 +53,15 @@ abstract class Controller extends Validator
     {
         return hash($method ?? $this->hashMethod, $param);
     }
+
+    protected function getData($names)
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (!$this->request->hasProperties($data, $names)) {
+            $this->response->error(400, "Brakujące parametry w formularzu");
+        }
+
+        return $data;
+    }
 }
