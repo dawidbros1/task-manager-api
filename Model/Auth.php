@@ -34,6 +34,8 @@ class Auth extends Database
 
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
+      if ($data) $data['password'] = "";
+
       return $data;
    }
 
