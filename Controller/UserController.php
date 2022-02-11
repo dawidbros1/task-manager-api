@@ -2,56 +2,26 @@
 
 namespace Controller;
 
-use Model\User;
+use Rules\AuthRules;
+use Model\Auth;
+use stdClass;
 
 class UserController extends Controller
 {
-
-    public function testAction()
+    public function __construct($action)
     {
-        return "Sprawdzam czy wszystko działa";
+        parent::__construct($action);
+        $this->model = new Auth;
+        $this->rules = new AuthRules();
     }
 
-    // /**
-    //  * "/user/list" Endpoint - Get list of users
-    //  */
-    // public function listAction()
-    // {
-    //     $strErrorDesc = '';
-    //     $requestMethod = $_SERVER["REQUEST_METHOD"];
-    //     $arrQueryStringParams = $this->getQueryStringParams();
+    public function updateUsername()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $names = ['id', 'username'];
 
-    //     if (strtoupper($requestMethod) == 'GET') {
-    //         try {
-    //             $userModel = new User();
-
-    //             $intLimit = 10;
-    //             if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
-    //                 $intLimit = $arrQueryStringParams['limit'];
-    //             }
-
-    //             $arrUsers = $userModel->getUsers($intLimit);
-    //             $responseData = json_encode($arrUsers);
-    //         } catch (\Error $e) {
-    //             $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';
-    //             $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
-    //         }
-    //     } else {
-    //         $strErrorDesc = 'Method not supported';
-    //         $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-    //     }
-
-    //     // send output
-    //     if (!$strErrorDesc) {
-    //         $this->sendOutput(
-    //             $responseData,
-    //             array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-    //         );
-    //     } else {
-    //         $this->sendOutput(
-    //             json_encode(array('error' => $strErrorDesc)),
-    //             array('Content-Type: application/json', $strErrorHeader)
-    //         );
-    //     }
-    // }
+        if (!$this->request->hasProperties($data, $names)) {
+            $this->response->error(400, "Brakujące parametry w formularzu");
+        }
+    }
 }

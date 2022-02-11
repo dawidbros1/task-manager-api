@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Model;
-
-use Exception\AppException;
+namespace Model\General;
 
 class Config
 {

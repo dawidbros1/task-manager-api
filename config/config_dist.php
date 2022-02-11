@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Model\Config;
+use Model\General\Config;
 
 return new Config(
    [

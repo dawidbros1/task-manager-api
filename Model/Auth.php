@@ -2,7 +2,7 @@
 
 namespace Model;
 
-use Model\Database;
+use Model\General\Database;
 
 use PDO;
 

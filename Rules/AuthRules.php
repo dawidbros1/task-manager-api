@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rules;
 
-use Model\Rules;
+use Model\General\Rules;
 
 class AuthRules extends Rules
 {

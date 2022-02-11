@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-use Rules\AuthRules;
+use Rules\UserRules;
 use Model\Auth;
 use stdClass;
 
@@ -12,7 +12,7 @@ class AuthController extends Controller
    {
       parent::__construct($action);
       $this->model = new Auth;
-      $this->rules = new AuthRules();
+      $this->rules = new UserRules();
    }
 
    public function registerAction(): void

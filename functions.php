@@ -1,6 +1,6 @@
 <?php
 
-use Model\Response;
+use Model\General\Response;
 
 // uri[id] dependest from location on server
 // uri[2] is ControllerName if location in root like a localhost/index.php
@@ -8,7 +8,7 @@ use Model\Response;
 
 function getController()
 {
-  $response = new Response;
+  $response = new Response();
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri = explode('/', $uri);
   $controllerName = $uri[4];

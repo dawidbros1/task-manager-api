@@ -2,8 +2,8 @@
 
 namespace Controller;
 
-use Model\Database;
-use Model\Response;
+use Model\General\Database;
+use Model\General\Response;
 use Helper\Request;
 use Validator\Validator;
 
