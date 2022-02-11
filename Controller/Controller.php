@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use DateTime;
 use Model\General\Database;
 use Model\General\Response;
 use Helper\Request;
@@ -46,7 +47,6 @@ abstract class Controller extends Validator
 
         $action = $this->action . "Action";
         $this->$action();
-        // $this->response->send();
     }
 
     protected function hash($param, $method = null)
@@ -63,5 +63,16 @@ abstract class Controller extends Validator
         }
 
         return $data;
+    }
+
+    protected function generateKeys(string $email)
+    {
+        $now = (DateTime::createFromFormat('U.u', microtime(true)))->format("U-u");
+        $input = $now . rand(1, 1000000);
+
+        $secret_key = $this->hash((string) $input);
+        $side_key = $this->hash((string) ($email . $secret_key));
+
+        return [$side_key, $secret_key];
     }
 }

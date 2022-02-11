@@ -26,6 +26,11 @@ class AuthController extends Controller
       }
 
       if ($validateStatus && $isEmailUnique) {
+         [$side_key, $secret_key] = $this->generateKeys($data->email);
+
+         $data->side_key = $side_key;
+         $data->secret_key = $secret_key;
+
          $this->model->register((array) $data);
          $this->response->success();
       }

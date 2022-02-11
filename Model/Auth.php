@@ -14,11 +14,13 @@ class Auth extends Database
          'username' => $data['username'],
          'email' => $data['email'],
          'password' => $data['password'],
+         'side_key' => $data['side_key'],
+         'secret_key' => $data['secret_key'],
          'created' => date('Y-m-d H:i:s'),
       ];
 
-      $sql = "INSERT INTO users (username, email, password, created) 
-         VALUES (:username, :email, :password, :created)";
+      $sql = "INSERT INTO users (username, email, password, side_key, secret_key, created) 
+         VALUES (:username, :email, :password, :side_key, :secret_key, :created)";
 
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute($data);
@@ -34,7 +36,7 @@ class Auth extends Database
 
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      if ($data) $data['password'] = "";
+      if ($data) unset($data['password'], $data['secret_key']);
 
       return $data;
    }
