@@ -6,6 +6,7 @@ use DateTime;
 use Model\General\Database;
 use Model\General\Response;
 use Helper\Request;
+use Model\User;
 use Validator\Validator;
 
 abstract class Controller extends Validator
@@ -34,6 +35,7 @@ abstract class Controller extends Validator
         }
 
         Database::initConfiguration(self::$config->get('db'));
+        $this->user = new User();
         $this->hashMethod = self::$config->get('hash.method');
     }
 
@@ -54,15 +56,19 @@ abstract class Controller extends Validator
         return hash($method ?? $this->hashMethod, $param);
     }
 
-    protected function getData($names)
+    protected function getData($names, $authorize = true)
     {
-        $data = json_decode(file_get_contents("php://input"));
+        if ($authorize) array_push($names, 'id', 'sideKey');
 
-        if (!$this->request->hasProperties($data, $names)) {
+        $input = json_decode(file_get_contents("php://input"));
+
+        if (!$this->request->hasProperties($input, $names)) {
             $this->response->error(400, "Brakujące parametry w formularzu");
         }
 
-        return $data;
+        if ($authorize) $this->authorize($input->id, $input->sideKey);
+
+        return $input;
     }
 
     protected function generateKeys(string $email)
@@ -70,9 +76,24 @@ abstract class Controller extends Validator
         $now = (DateTime::createFromFormat('U.u', microtime(true)))->format("U-u");
         $input = $now . rand(1, 1000000);
 
-        $secret_key = $this->hash((string) $input);
-        $side_key = $this->hash((string) ($email . $secret_key));
+        $secretKey = $this->hash((string) $input);
+        $sideKey = $this->createSideKey($secretKey, $email);
+        return [$sideKey, $secretKey];
+    }
 
-        return [$side_key, $secret_key];
+    protected function createSideKey($secretKey, $email)
+    {
+        return $this->hash((string) ($secretKey . $email));
+    }
+
+    protected function authorize($id, $sideKey)
+    {
+        $data = $this->user->getProperties($id, ['email', 'secret_key']);
+
+        if (!$data) $this->response->error(401, "Brak takiego użytkowina!");
+
+        if ($sideKey != $this->createSideKey($data['secret_key'], $data['email'])) {
+            $this->response->error(401, "Action is Unauthorized!");
+        }
     }
 }
