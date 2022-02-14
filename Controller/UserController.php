@@ -3,26 +3,23 @@
 namespace Controller;
 
 use Rules\UserRules;
-use Model\User;
-use stdClass;
 
 class UserController extends Controller
 {
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->model = new User();
         $this->rules = new UserRules();
     }
 
     public function updateUsernameAction()
     {
-        $data = $this->getData(['id', 'username']);
+        $data = $this->getData(['username']);
 
         [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 
         if ($validateStatus) {
-            $this->model->updateUsername((array) $data);
+            $this->user->updateUsername((array) $data);
             $this->response->success();
         }
 
@@ -31,19 +28,18 @@ class UserController extends Controller
 
     public function updatePasswordAction()
     {
-        $data = $this->getData(['id', 'currentPassword', 'password', 'repeatPassword']);
-        $user = $this->model->getUser($data->id);
+        $data = $this->getData(['currentPassword', 'password', 'repeatPassword']);
+
+        $password = $this->user->getProperty($data->id, 'password');
 
         [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 
-        // SPRAWDZ AUTORYZACJE API KEY
-
-        if (!$correctPassword = ($user['password'] === $data->currentPassword)) {
+        if (!$correctPassword = ($password === $data->currentPassword)) {
             $validateMessages['currentPassword']['same'] = "Podane hasło jest nieprawidłowe";
         }
 
         if ($validateStatus && $correctPassword) {
-            $this->model->updatePassword((array) $data);
+            $this->user->updatePassword((array) $data);
             $this->response->success();
         }
 
