@@ -17,7 +17,7 @@ class AuthController extends Controller
 
    public function registerAction(): void
    {
-      $data = $this->getData(['username', 'email', 'password', 'repeatPassword']);
+      $data = $this->getData(['username', 'email', 'password', 'repeatPassword'], false);
 
       [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 
@@ -26,10 +26,10 @@ class AuthController extends Controller
       }
 
       if ($validateStatus && $isEmailUnique) {
-         [$side_key, $secret_key] = $this->generateKeys($data->email);
+         [$sideKey, $secretKey] = $this->generateKeys($data->email);
 
-         $data->side_key = $side_key;
-         $data->secret_key = $secret_key;
+         $data->sideKey = $sideKey;
+         $data->secretKey = $secretKey;
 
          $this->model->register((array) $data);
          $this->response->success();
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
    public function loginAction(): void
    {
-      $data = $this->getData(['email', 'password']);
+      $data = $this->getData(['email', 'password'], false);
 
       if ($user = $this->model->login($data->email, $data->password)) {
          $object = new stdClass();
