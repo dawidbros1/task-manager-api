@@ -14,8 +14,8 @@ class Auth extends Database
          'username' => $data['username'],
          'email' => $data['email'],
          'password' => $data['password'],
-         'side_key' => $data['side_key'],
-         'secret_key' => $data['secret_key'],
+         'side_key' => $data['sideKey'],
+         'secret_key' => $data['secretKey'],
          'created' => date('Y-m-d H:i:s'),
       ];
 
@@ -28,16 +28,11 @@ class Auth extends Database
 
    public function login(string $email, string $password)
    {
-      $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email=:email AND password=:password");
-      $stmt->execute([
-         'email' => $email,
-         'password' => $password,
-      ]);
+      $stmt = $this->pdo->prepare("SELECT id, username, email, side_key AS sideKey, created
+      FROM users WHERE email=:email AND password=:password");
 
+      $stmt->execute(['email' => $email, 'password' => $password]);
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      if ($data) unset($data['password'], $data['secret_key']);
-
       return $data;
    }
 
