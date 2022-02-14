@@ -26,11 +26,28 @@ class User extends Database
         ]);
     }
 
-    public function getUser(int $id): array
+    public function getProperty(int $id, string $property): string
     {
+        $stmt = $this->pdo->prepare("SELECT $property FROM users WHERE id=:id");
+        $stmt->execute(['id' => $id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) $data = $data[$property];
+        return $data;
+    }
+
+    public function getProperties(int $id, array $properties)
+    {
+        $output = "";
+
+        foreach ($properties as $property) $output = $output . $property . ",";
+
+        $output = substr_replace($output, "", -1);
+
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user;
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data;
     }
 }
