@@ -7,6 +7,7 @@ use Model\General\Database;
 use Model\General\Response;
 use Helper\Request;
 use Model\User;
+use stdClass;
 use Validator\Validator;
 
 abstract class Controller extends Validator
@@ -93,5 +94,12 @@ abstract class Controller extends Validator
         if ($sideKey != $this->createSideKey($data['secret_key'], $data['email'])) {
             $this->response->error(401, "Action is Unauthorized!");
         }
+    }
+
+    protected function createObject($data, $name)
+    {
+        $object = new stdClass();
+        $object->$name = $data;
+        return $object;
     }
 }
