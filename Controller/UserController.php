@@ -30,7 +30,7 @@ class UserController extends Controller
     {
         $data = $this->getData(['currentPassword', 'password', 'repeatPassword']);
 
-        $password = $this->user->getProperty($data->id, 'password');
+        $password = $this->user->getProperty($data->user_id, 'password');
 
         [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 

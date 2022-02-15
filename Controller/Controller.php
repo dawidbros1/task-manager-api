@@ -58,7 +58,7 @@ abstract class Controller extends Validator
 
     protected function getData($names, $authorize = true)
     {
-        if ($authorize) array_push($names, 'id', 'sideKey');
+        if ($authorize) array_push($names, 'user_id', 'sideKey');
 
         $input = json_decode(file_get_contents("php://input"));
 
@@ -66,7 +66,7 @@ abstract class Controller extends Validator
             $this->response->error(400, "Brakujące parametry w formularzu");
         }
 
-        if ($authorize) $this->authorize($input->id, $input->sideKey);
+        if ($authorize) $this->authorize($input->user_id, $input->sideKey);
 
         return $input;
     }
@@ -86,9 +86,9 @@ abstract class Controller extends Validator
         return $this->hash((string) ($secretKey . $email));
     }
 
-    protected function authorize($id, $sideKey)
+    protected function authorize($user_id, $sideKey)
     {
-        $data = $this->user->getProperties($id, ['email', 'secret_key']);
+        $data = $this->user->getProperties($user_id, ['email', 'secret_key']);
 
         if (!$data) $this->response->error(401, "Brak takiego użytkowina!");
 

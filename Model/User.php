@@ -12,7 +12,7 @@ class User extends Database
     {
         $stmt = $this->pdo->prepare("UPDATE users SET username=:username WHERE id=:id");
         $stmt->execute([
-            'id' => $data['id'],
+            'id' => $data['user_id'],
             'username' => $data['username']
         ]);
     }
@@ -21,7 +21,7 @@ class User extends Database
     {
         $stmt = $this->pdo->prepare("UPDATE users SET password=:password WHERE id=:id");
         $stmt->execute([
-            'id' => $data['id'],
+            'id' => $data['user_id'],
             'password' => $data['password']
         ]);
     }
