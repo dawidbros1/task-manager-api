@@ -12,7 +12,7 @@ class Project extends Database
    {
       $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE user_id=:user_id");
       $stmt->execute(['user_id' => $user_id]);
-      $data = $stmt->fetch(PDO::FETCH_ASSOC);
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
       return $data;
    }
 
