@@ -16,8 +16,8 @@ class ProjectController extends Controller
 
    public function getAction()
    {
-      $user_id = $this->getData(['user_id'])->user_id;
-      $projects = $this->project->get($user_id);
+      $data = $this->getData(['user_id']);
+      $projects = $this->project->get($data->user_id);
       $this->response->success($projects);
    }
 
