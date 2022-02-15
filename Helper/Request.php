@@ -43,6 +43,7 @@ class Request
 
     public function hasProperties($object, $properties)
     {
+        $ok = true;
         $missingFields = "";
 
         foreach ($properties as $property) {
@@ -53,6 +54,6 @@ class Request
         }
 
         if (!$ok) $missingFields = substr($missingFields, 0, -2);
-        return [$ok ?? true, $missingFields];
+        return [$ok, $missingFields];
     }
 }
