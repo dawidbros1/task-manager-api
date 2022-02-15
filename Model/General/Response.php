@@ -4,32 +4,25 @@ namespace Model\General;
 
 class Response
 {
-   public function setStatus($status)
-   {
-      $this->status = $status;
-   }
-
-   public function setData($data)
-   {
-      $this->data = $data;
-   }
-
-   public function setValidateMessages($validateMessages)
-   {
-      $this->validateMessages = $validateMessages;
-   }
-
    public function success(?object $data = null)
    {
-      $this->setStatus(200);
-      $this->setData($data);
+      $this->status = 200;
+      $this->data = $data;
       $this->send();
    }
 
-   public function error($status, $validateMessages)
+   public function error($status, $description = "")
    {
-      $this->setStatus($status);
-      $this->setValidateMessages($validateMessages);
+      $this->status = $status;
+      $this->description = $description;
+      $this->send();
+   }
+
+   public function validateError($validateMessages, $description = "")
+   {
+      $this->status = 403;
+      $this->validateMessages = $validateMessages;
+      $this->description = $description;
       $this->send();
    }
 

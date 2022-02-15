@@ -17,7 +17,6 @@ function getController()
 
   if (!file_exists(__DIR__ . "\\" . $namespace . ".php")) {
     $response->error(400, "Controller [" . $controllerName . "] doesnt exists");
-    $response->send();
   }
 
   $controller = new $namespace($uri[5]);

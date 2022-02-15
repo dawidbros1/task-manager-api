@@ -23,7 +23,7 @@ class UserController extends Controller
             $this->response->success();
         }
 
-        $this->response->error(403, $validateMessages);
+        $this->response->validateError($validateMessages);
     }
 
     public function updatePasswordAction()
@@ -43,6 +43,6 @@ class UserController extends Controller
             $this->response->success();
         }
 
-        $this->response->error(403, $validateMessages);
+        $this->response->validateError($validateMessages);
     }
 }

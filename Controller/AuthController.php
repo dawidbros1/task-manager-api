@@ -35,7 +35,7 @@ class AuthController extends Controller
          $this->response->success();
       }
 
-      $this->response->error(403, $validateMessages);
+      $this->response->validateError($validateMessages);
    }
 
    public function loginAction(): void
@@ -54,6 +54,6 @@ class AuthController extends Controller
          $validateMessages['password']['notCorrect'] = "Hasło jest błędne";
       }
 
-      $this->response->error(403, $validateMessages);
+      $this->response->validateError($validateMessages);
    }
 }

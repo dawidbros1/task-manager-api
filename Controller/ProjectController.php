@@ -32,7 +32,7 @@ class ProjectController extends Controller
          $this->response->success();
       }
 
-      $this->response->error(403, $validateMessages);
+      $this->response->validateError($validateMessages);
    }
 
    // public function updateAction()

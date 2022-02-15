@@ -45,7 +45,6 @@ abstract class Controller extends Validator
         if (!method_exists($this, $this->action . "Action")) {
             $className = (new \ReflectionClass($this))->getShortName();
             $this->response->error(400, "Action [" . $this->action . "] doesn't exists in " . $className);
-            $this->response->send();
         }
 
         $action = $this->action . "Action";
@@ -89,7 +88,7 @@ abstract class Controller extends Validator
     {
         $data = $this->user->getProperties($user_id, ['email', 'secret_key']);
 
-        if (!$data) $this->response->error(401, "Brak takiego użytkowina!");
+        if (!$data) $this->response->error(403, "Podany użytkownik nie istnieje!");
 
         if ($sideKey != $this->createSideKey($data['secret_key'], $data['email'])) {
             $this->response->error(401, "Action is Unauthorized!");
