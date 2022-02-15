@@ -41,16 +41,18 @@ class Request
         return true;
     }
 
-    // 
-
     public function hasProperties($object, $properties)
     {
+        $missingFields = "";
+
         foreach ($properties as $property) {
             if (!property_exists($object, $property)) {
-                return false;
+                $missingFields .= $property . ", ";
+                $ok = false;
             }
         }
 
-        return true;
+        if (!$ok) $missingFields = substr($missingFields, 0, -2);
+        return [$ok ?? true, $missingFields];
     }
 }

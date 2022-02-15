@@ -61,11 +61,9 @@ abstract class Controller extends Validator
         if ($authorize) array_push($names, 'user_id', 'sideKey');
 
         $input = json_decode(file_get_contents("php://input"));
+        [$ok, $missingFields] = $this->request->hasProperties($input, $names);
 
-        if (!$this->request->hasProperties($input, $names)) {
-            $this->response->error(400, "Brakujące parametry w formularzu");
-        }
-
+        if (!$ok) $this->response->error(400, "Brakujące parametry w formularzu to: " . $missingFields);
         if ($authorize) $this->authorize($input->user_id, $input->sideKey);
 
         return $input;
