@@ -18,7 +18,7 @@ class ProjectController extends Controller
    {
       $data = $this->getData(['user_id']);
       $projects = $this->project->get($data->user_id);
-      $this->response->success($projects);
+      $this->response->success($this->createObject($projects, 'projects'));
    }
 
    public function createAction()
