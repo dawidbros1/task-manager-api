@@ -8,7 +8,7 @@ use PDO;
 
 class Project extends Database
 {
-   public function get(int $user_id)
+   public function getAll(int $user_id)
    {
       $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE user_id=:user_id");
       $stmt->execute(['user_id' => $user_id]);
@@ -16,10 +16,10 @@ class Project extends Database
       return $data;
    }
 
-   public function create(array $data): void
+   public function create(array $data)
    {
       $data = [
-         'user_id' => $data['id'],
+         'user_id' => $data['user_id'],
          'name' => $data['name'],
          'description' => $data['description'],
          'created' => date('Y-m-d H:i:s'),
@@ -30,5 +30,15 @@ class Project extends Database
 
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute($data);
+
+      return $this->get($this->pdo->lastInsertId());
+   }
+
+   private function get($id)
+   {
+      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE id=:id");
+      $stmt->execute(['id' => $id]);
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $data;
    }
 }
