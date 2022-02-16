@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Model\General;
 
+use Model\General\Response;
+
 class Config
 {
     private $config;
@@ -11,6 +13,7 @@ class Config
     public function __construct($configuration)
     {
         $this->config = $configuration;
+        $this->response = new Response();
     }
 
     public function get($path)
@@ -23,7 +26,7 @@ class Config
             if (array_key_exists($name, $output)) {
                 $output = $output[$name];
             } else {
-                // throw new AppException("Podany klucz konfiguracyjny [ $path ] nie istnieje");
+                $this->response->error(506, 'Configuration error - klucz [' . $name . '] nie istnieje');
             }
         }
 

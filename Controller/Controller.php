@@ -30,11 +30,6 @@ abstract class Controller extends Validator
         $this->response = new Response();
         $this->action = $action;
 
-        if (empty(self::$config->get('db'))) {
-            // throw new ConfigurationException('Configuration error');
-            exit("Configuration error");
-        }
-
         Database::initConfiguration(self::$config->get('db'));
         $this->user = new User();
         $this->hashMethod = self::$config->get('hash.method');

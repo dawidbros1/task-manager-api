@@ -2,6 +2,10 @@
 
 namespace Model\General;
 
+use Exception;
+
+use Model\General\Response;
+
 class Database
 {
     protected $pdo;
@@ -16,12 +20,15 @@ class Database
 
     public function __construct()
     {
-        // try {
+        $this->response = new Response();
+
         $this->validateConfig(self::$config);
-        $this->createConnection(self::$config);
-        // } catch (PDOException $e) {
-        //     throw new StorageException('Connection error');
-        // }
+
+        try {
+            $this->createConnection(self::$config);
+        } catch (Exception $e) {
+            $this->response->error(500, 'Database error - wystąpił problem podczas łączenia z bazą danych');
+        }
     }
 
     private function createConnection(array $config): void
@@ -40,55 +47,7 @@ class Database
             empty($config['user']) ||
             !isset($config['password'])
         ) {
-            // throw new ConfigurationException('Storage configuration error');
-        }
-    }
-
-    // public function __construct()
-    // {
-    // try {
-    //     $this->connection = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE_NAME);
-
-    //     if (mysqli_connect_errno()) {
-    //         throw new Exception("Could not connect to database.");
-    //     }
-    // } catch (Exception $e) {
-    //     throw new Exception($e->getMessage());
-    // }
-    // }
-
-    public function select($query = "", $params = [])
-    {
-        try {
-            $stmt = $this->executeStatement($query, $params);
-            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-            $stmt->close();
-
-            return $result;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-        return false;
-    }
-
-    private function executeStatement($query = "", $params = [])
-    {
-        try {
-            $stmt = $this->connection->prepare($query);
-
-            if ($stmt === false) {
-                throw new \Exception("Unable to do prepared statement: " . $query);
-            }
-
-            if ($params) {
-                $stmt->bind_param($params[0], $params[1]);
-            }
-
-            $stmt->execute();
-
-            return $stmt;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            $this->response->error(506, 'Configuration error - wymagane klucze to [database | host | user | password]');
         }
     }
 }
