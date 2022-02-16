@@ -35,9 +35,15 @@ class ProjectController extends Controller
       $this->response->validateError($validateMessages);
    }
 
-   // public function updateAction()
-   // {
-   // }
+   public function updateAction()
+   {
+      $data = $this->getData(['id', 'name', 'description'], true);
+
+      if ($this->project->get($data->id, $data->user_id)) {
+         $this->project->update((array) $data);
+         $this->response->success();
+      }
+   }
 
    // public function deleteAction()
    // {
