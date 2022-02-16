@@ -31,14 +31,26 @@ class Project extends Database
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute($data);
 
-      return $this->get($this->pdo->lastInsertId());
+      return $this->get($this->pdo->lastInsertId(), $data['user_id']);
    }
 
-   private function get($id)
+   public function update(array $data)
    {
-      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE id=:id");
-      $stmt->execute(['id' => $id]);
+      $stmt = $this->pdo->prepare("UPDATE projects SET name=:name, description=:description WHERE id=:id");
+      $stmt->execute([
+         'id' => $data['user_id'],
+         'name' => $data['name'],
+         'description' => $data['description']
+      ]);
+   }
+
+   public function get($id, $user_id)
+   {
+      $stmt = $this->pdo->prepare("SELECT id FROM projects WHERE id=:id AND user_id=:user_id");
+      $stmt->execute(['id' => $id, 'user_id' => $user_id]);
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
-      return $data;
+
+      if (!$data) $this->response->error(400, "Zasób o podanym ID nie istnieje");
+      else return $data;
    }
 }
