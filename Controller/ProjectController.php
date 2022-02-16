@@ -17,7 +17,7 @@ class ProjectController extends Controller
    public function getAction()
    {
       $data = $this->getData(['user_id']);
-      $projects = $this->project->get($data->user_id);
+      $projects = $this->project->getAll($data->user_id);
       $this->response->success($this->createObject($projects, 'projects'));
    }
 
@@ -28,8 +28,8 @@ class ProjectController extends Controller
       [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 
       if ($validateStatus) {
-         $this->project->create((array) $data);
-         $this->response->success();
+         $project = $this->project->create((array) $data);
+         $this->response->success($this->createObject($project, 'project'));
       }
 
       $this->response->validateError($validateMessages);
