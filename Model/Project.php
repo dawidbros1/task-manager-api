@@ -44,6 +44,13 @@ class Project extends Database
       ]);
    }
 
+   public function delete(array $data)
+   {
+      $sql = "DELETE FROM projects WHERE id=:id";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute(['id' => $data['id']]);
+   }
+
    public function get($id, $user_id)
    {
       $stmt = $this->pdo->prepare("SELECT id FROM projects WHERE id=:id AND user_id=:user_id");

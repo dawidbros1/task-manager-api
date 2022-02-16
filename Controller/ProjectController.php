@@ -45,7 +45,13 @@ class ProjectController extends Controller
       }
    }
 
-   // public function deleteAction()
-   // {
-   // }
+   public function deleteAction()
+   {
+      $data = $this->getData(['id'], true);
+
+      if ($this->project->get($data->id, $data->user_id)) {
+         $this->project->delete((array) $data);
+         $this->response->success();
+      }
+   }
 }
