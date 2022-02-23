@@ -90,10 +90,14 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function createObject($data, $name)
+    protected function createObject(array $data, array $names)
     {
         $object = new stdClass();
-        $object->$name = $data;
+
+        foreach ($names as $index => $name) {
+            $object->$name = $data[$index];
+        }
+
         return $object;
     }
 }

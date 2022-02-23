@@ -16,9 +16,23 @@ class ProjectController extends Controller
 
    public function getAction()
    {
+      $data = $this->getData(['id'], true);
+      // ID | USER_ID | SIDEKEY
+
+      $project = $this->project->get($data->id, $data->user_id);
+      $tasks = $this->project->getTasks($data->id);
+
+      $this->response->success($this->createObject(
+         [$project, $tasks],
+         ['project', 'tasks']
+      ));
+   }
+
+   public function getAllAction()
+   {
       $data = $this->getData(['user_id']);
       $projects = $this->project->getAll($data->user_id);
-      $this->response->success($this->createObject($projects, 'projects'));
+      $this->response->success($this->createObject([$projects], ['projects']));
    }
 
    public function createAction()
@@ -29,7 +43,7 @@ class ProjectController extends Controller
 
       if ($validateStatus) {
          $project = $this->project->create((array) $data);
-         $this->response->success($this->createObject($project, 'project'));
+         $this->response->success($this->createObject([$project], ['project']));
       }
 
       $this->response->validateError($validateMessages);
