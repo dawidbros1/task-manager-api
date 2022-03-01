@@ -62,4 +62,11 @@ class Task extends Database
          'status' => $data['status']
       ]);
    }
+
+   public function delete(int $id)
+   {
+      $sql = "DELETE FROM tasks WHERE id=:id";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute(['id' => $id]);
+   }
 }

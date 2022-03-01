@@ -43,4 +43,12 @@ class TaskController extends Controller
 
       $this->response->validateError($validateMessages);
    }
+
+   public function deleteAction()
+   {
+      $input = $this->getData(['id'], true);
+      $task = $this->task->get($input->id, $input->user_id);
+      $this->task->delete((int) $task['id']);
+      $this->response->success();
+   }
 }
