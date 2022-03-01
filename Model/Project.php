@@ -66,8 +66,14 @@ class Project extends Database
 
    public function delete(array $data)
    {
+      // DELETE PROJECT
       $sql = "DELETE FROM projects WHERE id=:id";
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute(['id' => $data['id']]);
+
+      // DELETE TASKS FORM PROJECT
+      $sql = "DELETE FROM tasks WHERE project_id=:project_id";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute(['project_id' => $data['id']]);
    }
 }
