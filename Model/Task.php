@@ -46,4 +46,20 @@ class Task extends Database
 
       return $data;
    }
+
+   public function update(array $data)
+   {
+      $stmt = $this->pdo->prepare(
+         "UPDATE tasks SET name=:name, 
+         description=:description, status=:status 
+         WHERE id=:id"
+      );
+
+      $stmt->execute([
+         'id' => $data['id'],
+         'name' => $data['name'],
+         'description' => $data['description'],
+         'status' => $data['status']
+      ]);
+   }
 }

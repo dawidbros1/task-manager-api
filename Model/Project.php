@@ -58,7 +58,7 @@ class Project extends Database
    {
       $stmt = $this->pdo->prepare("UPDATE projects SET name=:name, description=:description WHERE id=:id");
       $stmt->execute([
-         'id' => $data['user_id'],
+         'id' => $data['id'],
          'name' => $data['name'],
          'description' => $data['description']
       ]);

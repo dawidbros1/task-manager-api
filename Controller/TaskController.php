@@ -16,14 +16,29 @@ class TaskController extends Controller
 
    public function createAction()
    {
-      $data = $this->getData(['name', 'description', 'project_id'], true);
-      $this->task->authorize($data->user_id, $data->project_id);
+      $input = $this->getData(['name', 'description', 'project_id'], true);
+      $this->task->authorize($input->user_id, $input->project_id);
 
-      [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
+      [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
 
       if ($validateStatus) {
-         $task = $this->task->create((array) $data);
+         $task = $this->task->create((array) $input);
          $this->response->success($this->createObject([$task], ['task']));
+      }
+
+      $this->response->validateError($validateMessages);
+   }
+
+   public function updateAction()
+   {
+      $input = $this->getData(['id', 'name', 'description'], true);
+      $task = $this->task->get($input->id, $input->user_id);
+
+      [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
+
+      if ($validateStatus) {
+         $this->task->update((array) $input);
+         $this->response->success();
       }
 
       $this->response->validateError($validateMessages);
