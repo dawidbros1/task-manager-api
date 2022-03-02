@@ -17,7 +17,10 @@ class TaskController extends Controller
    public function createAction()
    {
       $input = $this->getData(['name', 'description', 'project_id'], true);
-      $this->task->authorize($input->user_id, $input->project_id);
+
+      if (!$this->task->authorize($input->user_id, $input->project_id)) {
+         $this->response->error(400, "Brak uprawnień do tego projektu");
+      }
 
       [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
 
@@ -31,9 +34,9 @@ class TaskController extends Controller
 
    public function updateAction()
    {
-      $input = $this->getData(['id', 'name', 'description'], true);
-      $task = $this->task->get($input->id, $input->user_id);
+      $this->getTask();
 
+      $input = $this->getData(['name', 'description']);
       [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
 
       if ($validateStatus) {
@@ -46,9 +49,23 @@ class TaskController extends Controller
 
    public function deleteAction()
    {
-      $input = $this->getData(['id'], true);
-      $task = $this->task->get($input->id, $input->user_id);
+      $task = $this->getTask();
       $this->task->delete((int) $task['id']);
       $this->response->success();
+   }
+
+   private function getTask()
+   {
+      $input = $this->getData(['id'], true);
+
+      if (!$task = $this->task->get($input->id)) {
+         $this->response->error(400, "Zasób o podanym ID nie istnieje");
+      }
+
+      if (!$this->task->authorize($input->user_id, $task['project_id'])) {
+         $this->response->error(400, "Brak uprawnień do tego projektu");
+      }
+
+      return $task;
    }
 }

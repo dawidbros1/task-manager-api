@@ -8,14 +8,6 @@ use PDO;
 
 class Task extends Database
 {
-   public function authorize($user_id, $project_id)
-   {
-      $stmt = $this->pdo->prepare("SELECT id FROM projects WHERE id=:id AND user_id=:user_id");
-      $stmt->execute(['id' => $project_id, 'user_id' => $user_id]);
-      $data = $stmt->fetch(PDO::FETCH_ASSOC);
-      if (!$data) $this->response->error(400, "Brak uprawnień do tego projektu");
-   }
-
    public function create(array $input)
    {
       $data = [
@@ -32,19 +24,15 @@ class Task extends Database
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute($data);
 
-      return $this->get($this->pdo->lastInsertId(), $input['user_id']);
+      return $this->get($this->pdo->lastInsertId());
    }
 
-   public function get($id, $user_id)
+   public function get($id)
    {
       $stmt = $this->pdo->prepare("SELECT * FROM tasks WHERE id=:id");
       $stmt->execute(['id' => $id]);
-      $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      if (!$data) $this->response->error(400, "Zasób o podanym ID nie istnieje");
-      $this->authorize($user_id, $data['project_id']);
-
-      return $data;
+      $task = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $task;
    }
 
    public function update(array $data)
@@ -68,5 +56,13 @@ class Task extends Database
       $sql = "DELETE FROM tasks WHERE id=:id";
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute(['id' => $id]);
+   }
+
+   public function authorize($user_id, $project_id)
+   {
+      $stmt = $this->pdo->prepare("SELECT id FROM projects WHERE id=:id AND user_id=:user_id");
+      $stmt->execute(['id' => $project_id, 'user_id' => $user_id]);
+      $project = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $project;
    }
 }
