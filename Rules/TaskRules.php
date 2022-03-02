@@ -18,6 +18,7 @@ class TaskRules extends Rules
    {
       $this->createRules('name', ['min' => 3, "max" => 64, 'specialCharacters' => true]);
       $this->createRules('description', ['max' => 2550]);
+      $this->createRules('status', ['enumeration' => [0, 1, 2, 3]]);
    }
 
    public function messages()
@@ -29,6 +30,10 @@ class TaskRules extends Rules
 
       $this->createMessages('description', [
          'max' => "Opis nie może zawierać więcej niż " . $this->value('description.max') . " znaków",
+      ]);
+
+      $this->createMessages('status', [
+         'enumeration' => "Status zadanie jest nieprawidłowy",
       ]);
    }
 }

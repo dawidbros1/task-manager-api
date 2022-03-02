@@ -112,7 +112,14 @@ class Validator
                     }
                 }
                 // ================================================
+                else if ($rule == "enumeration") {
+                    foreach ($value as $item) {
+                        if ($item == $input) $hasValue = true;
+                    }
 
+                    $ok = $hasValue ?? false;
+                }
+                // ================================================
                 if ($ok == false) {
                     $validate = false;
                     $messages[$type][$rule] = $message;
