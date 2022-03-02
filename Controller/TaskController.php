@@ -36,7 +36,7 @@ class TaskController extends Controller
    {
       $this->getTask();
 
-      $input = $this->getData(['name', 'description']);
+      $input = $this->getData(['name', 'description', 'status']);
       [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
 
       if ($validateStatus) {
