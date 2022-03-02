@@ -8,34 +8,6 @@ use PDO;
 
 class Project extends Database
 {
-   public function get($id, $user_id)
-   {
-      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE id=:id AND user_id=:user_id");
-      $stmt->execute(['id' => $id, 'user_id' => $user_id]);
-      $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      if (!$data) $this->response->error(400, "Zasób o podanym ID nie istnieje");
-      else return $data;
-   }
-
-   public function getTasks(int $project_id)
-   {
-      $stmt = $this->pdo->prepare("SELECT * FROM tasks WHERE project_id=:project_id");
-      $stmt->execute(['project_id' => $project_id]);
-      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-      if (!$data) return [];
-      else return $data;
-   }
-
-   public function getAll(int $user_id)
-   {
-      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE user_id=:user_id");
-      $stmt->execute(['user_id' => $user_id]);
-      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $data;
-   }
-
    public function create(array $data)
    {
       $data = [
@@ -52,6 +24,30 @@ class Project extends Database
       $stmt->execute($data);
 
       return $this->get($this->pdo->lastInsertId(), $data['user_id']);
+   }
+
+   public function get($id, $user_id)
+   {
+      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE id=:id AND user_id=:user_id");
+      $stmt->execute(['id' => $id, 'user_id' => $user_id]);
+      $project = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $project;
+   }
+
+   public function getAll(int $user_id)
+   {
+      $stmt = $this->pdo->prepare("SELECT * FROM projects WHERE user_id=:user_id");
+      $stmt->execute(['user_id' => $user_id]);
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $data;
+   }
+
+   public function getTasks(int $project_id)
+   {
+      $stmt = $this->pdo->prepare("SELECT * FROM tasks WHERE project_id=:project_id");
+      $stmt->execute(['project_id' => $project_id]);
+      $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $tasks ?? [];
    }
 
    public function update(array $data)

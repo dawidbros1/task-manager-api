@@ -14,13 +14,24 @@ class ProjectController extends Controller
       $this->project = new Project();
    }
 
+   public function createAction()
+   {
+      $input = $this->getData(['name', 'description'], true);
+
+      [$validateStatus, $validateMessages] = $this->validate((array) $input, $this->rules);
+
+      if ($validateStatus) {
+         $project = $this->project->create((array) $input);
+         $this->response->success($this->createObject([$project], ['project']));
+      }
+
+      $this->response->validateError($validateMessages);
+   }
+
    public function getAction()
    {
-      $data = $this->getData(['id'], true);
-      // ID | USER_ID | SIDEKEY
-
-      $project = $this->project->get($data->id, $data->user_id);
-      $tasks = $this->project->getTasks($data->id);
+      $project = $this->getProject();
+      $tasks = $this->project->getTasks($project['id']);
 
       $this->response->success($this->createObject(
          [$project, $tasks],
@@ -30,42 +41,37 @@ class ProjectController extends Controller
 
    public function getAllAction()
    {
-      $data = $this->getData(['user_id']);
-      $projects = $this->project->getAll($data->user_id);
+      $input = $this->getData(['user_id'], true);
+      $projects = $this->project->getAll($input->user_id);
       $this->response->success($this->createObject([$projects], ['projects']));
    }
 
-   public function createAction()
-   {
-      $data = $this->getData(['name', 'description'], true);
-
-      [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
-
-      if ($validateStatus) {
-         $project = $this->project->create((array) $data);
-         $this->response->success($this->createObject([$project], ['project']));
-      }
-
-      $this->response->validateError($validateMessages);
-   }
 
    public function updateAction()
    {
-      $data = $this->getData(['id', 'name', 'description'], true);
-
-      if ($this->project->get($data->id, $data->user_id)) {
-         $this->project->update((array) $data);
-         $this->response->success();
-      }
+      $this->getProject();
+      $input = $this->getData(['id', 'name', 'description'], false);
+      $this->project->update((array) $input);
+      $this->response->success();
    }
 
    public function deleteAction()
    {
-      $data = $this->getData(['id'], true);
+      $project = $this->getProject();
+      $this->project->delete((array) $project->id);
+      $this->response->success();
+   }
 
-      if ($this->project->get($data->id, $data->user_id)) {
-         $this->project->delete((array) $data);
-         $this->response->success();
+   // ===== ===== ===== //
+
+   private function getProject()
+   {
+      $input = $this->getData(['id'], true);
+
+      if (!$project = $this->project->get($input->id, $input->user_id)) {
+         $this->response->error(400, "Zasób o podanym ID nie istnieje");
       }
+
+      return $project;
    }
 }
