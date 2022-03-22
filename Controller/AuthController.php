@@ -30,6 +30,7 @@ class AuthController extends Controller
 
          $data->sideKey = $sideKey;
          $data->secretKey = $secretKey;
+         $data->password = $this->hash($data->password); // Hash passwrod
 
          $this->model->register((array) $data);
          $this->response->success();
@@ -42,7 +43,7 @@ class AuthController extends Controller
    {
       $data = $this->getData(['email', 'password'], false);
 
-      if ($user = $this->model->login($data->email, $data->password)) {
+      if ($user = $this->model->login($data->email, $this->hash($data->password))) {
          $object = new stdClass();
          $object->user = $user;
          $this->response->success($object);
