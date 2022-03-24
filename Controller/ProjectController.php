@@ -58,7 +58,7 @@ class ProjectController extends Controller
    public function deleteAction()
    {
       $project = $this->getProject();
-      $this->project->delete((array) $project->id);
+      $this->project->delete((int) $project['id']);
       $this->response->success();
    }
 
