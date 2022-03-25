@@ -29,9 +29,9 @@ class UserController extends Controller
     public function updatePasswordAction()
     {
         $data = $this->getData(['currentPassword', 'password', 'repeatPassword']);
+        $data->currentPassword = $this->hash($data->currentPassword);
 
         $password = $this->user->getProperty($data->user_id, 'password');
-
         [$validateStatus, $validateMessages] = $this->validate((array) $data, $this->rules);
 
         if (!$correctPassword = ($password === $data->currentPassword)) {
@@ -39,6 +39,7 @@ class UserController extends Controller
         }
 
         if ($validateStatus && $correctPassword) {
+            $data->password = $this->hash($data->password);
             $this->user->updatePassword((array) $data);
             $this->response->success();
         }
