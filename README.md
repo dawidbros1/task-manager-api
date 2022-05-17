@@ -2,7 +2,7 @@
 Jest to API to frontendowej części projektu.
 
 ## Użyte Technologie
-• PHP \
+• PHP 7.4 \
 • PDO
 
 ## Funkcjonalności
