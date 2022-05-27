@@ -1,22 +1,22 @@
 # Task Manager - API
-Jest to API to frontendowej części projektu.
+It is the API of the front-end part of the project.
 
-## Użyte Technologie
-• PHP 7.4 \
-• PDO
+### Build with
+1. PHP 7.4
 
-## Funkcjonalności
-• Rejestracja nowego użytkownika \
-• Logowanie na konto \
-• Zarządzanie projektami \
-• Zarządzania zadaniami
+### Features
+1. New user registration
+2. Account login
+3. Project management
+4. Task management
 
-## END POINTS - IN FUTURE
+### Installation Instructions
+1. Run `git clone https://github.com/dawidbros1/task-manager-api`
+2. Run `composer install`
+3. Create a MySQL database for the project
+4. Import tables from file `/sql/database.sql` to your database
+5. Set the right project location on the **functions.php** server
+6. Install [frontend](https://github.com/dawidbros1/task-manager) 
 
-## Instalacja
-• Pobranie repozytorium \
-• Uruchomienie polecenia `composer install` \
-• Utworzenie bazy danych **task_manager** \
-• Import tabel z pliku ./sql/database.sql do bazy danych \
-• Ustawić odpowiednią lokalizację projektu na serwerze **functions.php** \
-• Instalacja [frontendu](https://github.com/dawidbros1/task-manager) 
+# DOCUMENTATION - IN FUTURE
+### END POINTS
